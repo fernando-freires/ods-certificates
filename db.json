@@ -1,0 +1,119 @@
+{
+  "users": [
+    {
+      "name": "Fernando Freires De Carvalho",
+      "email": "fernandofreiresc@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": 1
+    },
+    {
+      "name": "Fernando Freires De Carvalho",
+      "email": "fernandofreires17@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": 2
+    },
+    {
+      "name": "Jorge",
+      "email": "antonio.13381@gmail.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": 3
+    },
+    {
+      "name": "OOOOO Trrjdn Bao",
+      "email": "ffdc.snf21@uea.edu.br",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": 4
+    },
+    {
+      "name": "Ketlen Oliveira",
+      "email": "ketlen@email.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": 5
+    }
+  ],
+  "login": [],
+  "products": [
+    {
+      "name": "Produto 1",
+      "price": "1240,69",
+      "quantity": "20",
+      "userId": 1,
+      "id": 1
+    },
+    {
+      "name": "Produto 2",
+      "price": "1240,69",
+      "quantity": "20",
+      "userId": 1,
+      "id": 2
+    },
+    {
+      "id": 3,
+      "name": "Produto 5",
+      "price": "1240,69",
+      "userId": 2,
+      "quantity": "20"
+    },
+    {
+      "id": 4,
+      "name": "Produto 7",
+      "price": "1240,69",
+      "userId": 2,
+      "quantity": "20"
+    },
+    {
+      "name": "Produto melhor agora",
+      "price": "25000",
+      "quantity": "222222",
+      "userId": 1,
+      "id": 5
+    },
+    {
+      "name": "Produto novo f17",
+      "price": "20000",
+      "quantity": "100",
+      "userId": 2,
+      "id": 6
+    },
+    {
+      "name": "Produto meu",
+      "price": "12345",
+      "quantity": "10",
+      "userId": 4,
+      "id": 7
+    },
+    {
+      "name": "Fernando Freires de Carvalho",
+      "price": "25000",
+      "quantity": "3",
+      "userId": 1,
+      "id": 8
+    },
+    {
+      "name": "Fernando Freires de Carvalho",
+      "price": "25000",
+      "quantity": "10",
+      "userId": 1,
+      "id": 9
+    },
+    {
+      "name": "Produto novo atualizado",
+      "price": "25000",
+      "quantity": "10",
+      "userId": 5,
+      "id": 10
+    },
+    {
+      "name": "Produto novo 2",
+      "price": "333",
+      "quantity": "10000",
+      "userId": 5,
+      "id": 11
+    }
+  ]
+}
