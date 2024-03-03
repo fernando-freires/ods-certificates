@@ -65,6 +65,7 @@ export function Login() {
             <TextField
               label="Senha"
               size="small"
+              type="password"
               fullWidth
               error={!!errors.password}
               helperText={errors ? errors.password?.message : ""}
