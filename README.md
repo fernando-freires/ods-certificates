@@ -22,3 +22,7 @@
 ##### Considerações:
 
 - Desde já agradeço a oportunidade e me coloco a disposição para qualquer dúvida ou explicação necessária!
+
+Segue vídeo de exemplo de demonstração
+
+[Screencast from 03-03-2024 17:25:49.webm](https://github.com/fernando-freires/Teste-ReactJS/assets/89278418/af37bcf9-8211-4cf9-9768-54554ea0afef)
