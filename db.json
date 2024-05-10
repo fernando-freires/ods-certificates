@@ -1,5 +1,13 @@
 {
-  "users": [],
+  "users": [
+    {
+      "name": "Bix",
+      "email": "bix@email.com",
+      "password": "123456",
+      "confirmPassword": "123456",
+      "id": 1
+    }
+  ],
   "login": [],
   "products": []
 }

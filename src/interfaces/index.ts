@@ -17,19 +17,16 @@ export interface ILogin {
   password: string;
 }
 
-export interface IProducts {
-  name: string;
-  price: string;
-  quantity: string;
-  userId?: number;
-}
 export interface IGetUser extends IInitialRegistration {
   id: number;
 }
 
-export interface IGetProducts {
-  id: number;
-  name: string;
-  price: string;
-  quantity: string;
+export interface Transaction {
+  date: number;
+  amount: string;
+  transaction_type: "deposit" | "withdraw";
+  currency: string;
+  account: string;
+  industry: string;
+  state: string;
 }

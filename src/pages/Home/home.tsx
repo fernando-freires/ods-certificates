@@ -1,101 +1,121 @@
-import { Button, Card, Grid, Typography } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import api from "@services/api";
-import { storage } from "@services/api/storage";
+import { Transaction } from "@interfaces/index";
+import { Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
-import { IProducts } from "@interfaces/index";
+import { CustomCard } from "../../components/Card";
+import { SimpleBarChartComponent } from "../../components/Charts/Bar/index";
+import { DoubleBarChartComponent } from "../../components/Charts/DoubleBar";
+import { PieChartComponent } from "../../components/Charts/Pie";
+import { DatePicker } from "../../components/DatePicker";
+import { Select } from "../../components/Select";
+import SideMenu from "../../components/SideMenu/index";
+import { accounts } from "../../consts/accounts";
+import { industries } from "../../consts/industries";
+import { states } from "../../consts/states";
+import api from "@services/api";
 
 export function Home() {
-  const [products, setProducts] = useState<IProducts[] | null>(null);
-  const navigate = useNavigate();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  const handleLogout = async () => {
-    if (api.login.logout()) {
-      return navigate("/login");
-    }
-  };
-
-  const columns = [
-    { field: "id", headerName: "ID", width: 220 },
-    { field: "name", headerName: "Nome do produto", width: 220 },
-    { field: "price", headerName: "Preço do produto", width: 220 },
-    { field: "quantity", headerName: "Quantidade disponível", width: 220 },
-  ];
-
-  const rows = [{ id: 0, name: "loading", price: "loading", quantity: "0" }];
+  const menuItems = [{ text: "Home", url: "/home" }];
 
   useEffect(() => {
-    const fetchData = async () => {
-      const userId = storage.getUserId();
-      if (userId) {
-        try {
-          const userProducts = await api.user.getProductsByUserId(userId);
-          setProducts(userProducts);
-        } catch (error) {
-          console.error("Erro ao obter os produtos do usuário:", error);
-        }
-      }
-    };
-
     fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const data = await api.data.getAllTransactions();
+      setTransactions(data);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    }
+  };
+
+  const totalAmountOfTransactions = api.data.calculateTotalAmount(transactions);
+  const totalOfTransactions = api.data.calculateTotalTransactions(transactions);
+  const totalDeposits = api.data.calculateTotalDeposits(transactions);
+  const totalWithdraws = api.data.calculateTotalWithdrawals(transactions);
+  const totalIndustriesCategories = api.data.calculateUniqueIndustriesCount(transactions);
+
+  const transactionByIndustryData = api.data.calculateTransactionByIndustry(transactions);
+  const transactionByStateData = api.data.calculateTransactionByState(transactions);
+  const transactionByAccountData = api.data.calculateTransactionByAccount(transactions);
+  const totalTypeOfTransactions = api.data.calculateTransactionByMonthYear(transactions);
+
   return (
     <>
-      <Grid width="100%" display="flex" justifyContent="center" marginTop="2rem">
-        <Grid display="flex" justifyContent="space-between" flexDirection="column" alignItems="center" gap="1rem">
-          <Typography variant="h4" fontWeight="600">
-            Bem vindo, {storage.getUserName()?.split(" ")[0]}
-          </Typography>
-          <Grid display="flex" gap="1rem">
-            <Button variant="contained" color="error" onClick={handleLogout}>
-              Sair
-            </Button>
-            {products && products.length > 0 && (
-              <Button variant="contained" endIcon={<AddIcon />} onClick={() => navigate("/createProduct")} fullWidth>
-                Adicionar produto
-              </Button>
-            )}
+      <SideMenu menuItems={menuItems} />
+
+      <Grid width="100%" height="100%" display="flex" padding="0 3rem 0 3rem" flexDirection="column">
+        <Typography variant="h4">Seja bem vindo ao Dashboard</Typography>
+        <Typography variant="h6" marginTop="1rem">
+          Utilize os filtros abaixo para facilitar a sua análise:
+        </Typography>
+
+        <Grid item container spacing={2} marginTop="0.1rem">
+          <Grid item xs={12} sm={6} md={3}>
+            <DatePicker size="small" label="Filtrar por data" sx={{ width: "100%" }} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Select size="small" label="Filtrar por contas" options={accounts as []} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Select size="small" label="Filtrar por indústrias" options={industries as []} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Select size="small" label="Filtrar por estado" options={states as []} />
           </Grid>
         </Grid>
-      </Grid>
-      <Grid display="flex" flexDirection="column" justifyContent="space-evenly" alignItems="center">
-        <Card
-          elevation={9}
-          sx={{
-            width: "50%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            margin: "2em auto",
-            padding: "1rem",
-          }}
-        >
-          {products && products.length > 0 ? (
-            <DataGrid
-              rows={products ? products : rows}
-              onRowClick={value => navigate(`/product/edit/${value.id}`)}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5, 10]}
+
+        <Grid item container spacing={2} marginTop="1.5rem">
+          <Grid item xs={12} sm={6} md={2.4}>
+            <CustomCard title="Total em Transações" value={totalAmountOfTransactions} backgroundColor="#0088FE" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2.4}>
+            <CustomCard title="Número de Transações" value={`${totalOfTransactions}`} backgroundColor="#FFBB28" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2.4}>
+            <CustomCard title="Total de depósitos" value={`${totalDeposits}`} backgroundColor="#00C49F" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2.4}>
+            <CustomCard title="Total de despesa" value={`${totalWithdraws}`} backgroundColor="#FF8042" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={2.4}>
+            <CustomCard
+              title="Categorias de empresa"
+              value={`${totalIndustriesCategories}`}
+              backgroundColor="#AF69EE"
             />
-          ) : (
-            <Grid width="100%" height="20vh" display="flex" flexDirection="column" gap="2rem" alignItems="center">
-              <Typography variant="h6" fontWeight="600">
-                Que tal adicionar um novo produto, {storage.getUserName()?.split(" ")[0]}?
-              </Typography>
-              <Button variant="contained" endIcon={<AddIcon />} onClick={() => navigate("/createProduct")}>
-                Adicionar produto
-              </Button>
-            </Grid>
-          )}
-        </Card>
+          </Grid>
+        </Grid>
+
+        <Grid item container spacing={2} marginTop="1.5rem">
+          <Grid item xs={12} sm={6} md={4}>
+            <PieChartComponent data={transactionByIndustryData} title="Distribuição de transações por indústria" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <PieChartComponent data={transactionByStateData} title="Distribuição de transações por estado" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <SimpleBarChartComponent
+              data={transactionByAccountData}
+              title="Total de Transações por Conta"
+              dataKey="value"
+              xAxisDataKey="name"
+            />
+          </Grid>
+        </Grid>
+
+        <Grid item container spacing={2} marginTop="1.5rem">
+          <DoubleBarChartComponent
+            data={totalTypeOfTransactions}
+            title="Total de depósitos/despesas por Mês/Ano"
+            xAxisDataKey="name"
+            dataKey="Depositos"
+            barDataKeys={["Depositos", "Despesas"]}
+            colors={["#0088FE", "#FF8042"]}
+          />
+        </Grid>
       </Grid>
     </>
   );
