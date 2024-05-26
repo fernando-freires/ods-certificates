@@ -9,26 +9,7 @@ export function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // api.storyService.getAllStories().then(setStories);
-    // Remover esse setStories mockado e descomentar o código acima
-    setStories([
-      {
-        id: 0,
-        name: "Era uma vez um gay",
-        snippets: [
-          { id: 0, content: "O nome dele era Fernando" },
-          { id: 1, content: "Ele tinha um amigo chamado Thiago" },
-        ],
-      },
-      {
-        id: 1,
-        name: "Outra história",
-        snippets: [
-          { id: 0, content: "Era uma vez em uma terra distante" },
-          { id: 1, content: "Havia um castelo muito grande" },
-        ],
-      },
-    ]);
+    api.storyService.getAllStories().then(setStories);
   }, []);
 
   const handleLogout = async () => {
@@ -38,12 +19,9 @@ export function Home() {
   };
 
   const deleteStory = async (id: number) => {
-    // Remover esse codigo e descomentar o código abaixo desse console.log
-    console.log(`id a ser deletado: ${id}`);
-
-    // if ((await api.storyService.deleteStory(id)).data) {
-    //   return navigate("/");
-    // }
+    if ((await api.storyService.deleteStory(id)).data) {
+      return navigate("/");
+    }
   };
 
   if (!stories) {

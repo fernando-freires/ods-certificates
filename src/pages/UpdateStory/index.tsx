@@ -11,17 +11,7 @@ export const UpdateStory = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    // api.storyService.getStoryById(Number(id)).then(setStory);
-
-    // Remover esse setStories mockado e descomentar o código acima
-    setStory({
-      id: 0,
-      name: "Era uma vez um gay",
-      snippets: [
-        { id: 0, content: "O nome dele era Fernando" },
-        { id: 1, content: "Ele tinha um amigo chamado Thiago" },
-      ],
-    });
+    api.storyService.getStoryById(Number(id)).then(setStory);
   }, [id]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,10 +33,8 @@ export const UpdateStory = () => {
     if (!story) return;
     console.log(story);
 
-    // Descomentar o codigo abaixo para funcionar o update de Story
-
-    // const editStoryPayload: EditStoryDTO = { storyId: story.id, name: story.name };
-    // await api.storyService.editStory(editStoryPayload);
+    const editStoryPayload: EditStoryDTO = { storyId: story.id, name: story.name };
+    await api.storyService.editStory(editStoryPayload);
 
     for (const snippet of story.snippets) {
       const editSnippetPayload: EditSnippetDTO = { storyId: story.id, snippetId: snippet.id, snippet: snippet.content };
