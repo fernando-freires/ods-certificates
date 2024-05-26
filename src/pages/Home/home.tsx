@@ -95,7 +95,7 @@ export function Home() {
                   variant="contained"
                   color="error"
                   size="small"
-                  onClick={() => deleteStory(1)}
+                  onClick={() => deleteStory(story.id)}
                   sx={{ fontWeight: "bold", height: "60%" }}
                 >
                   Excluir história
