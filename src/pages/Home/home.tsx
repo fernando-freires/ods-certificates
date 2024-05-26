@@ -1,122 +1,127 @@
-import { Transaction } from "@interfaces/index";
-import { Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { CustomCard } from "../../components/Card";
-import { SimpleBarChartComponent } from "../../components/Charts/Bar/index";
-import { DoubleBarChartComponent } from "../../components/Charts/DoubleBar";
-import { PieChartComponent } from "../../components/Charts/Pie";
-import { DatePicker } from "../../components/DatePicker";
-import { Select } from "../../components/Select";
-import SideMenu from "../../components/SideMenu/index";
-import { accounts } from "../../consts/accounts";
-import { industries } from "../../consts/industries";
-import { states } from "../../consts/states";
+import { Story } from "@interfaces/index";
+import { Button, Card, Grid, Typography } from "@mui/material";
 import api from "@services/api";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Home() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  const menuItems = [{ text: "Home", url: "/home" }];
+  const [stories, setStories] = useState<Story[]>();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchData();
+    // api.storyService.getAllStories().then(setStories);
+    // Remover esse setStories mockado e descomentar o código acima
+    setStories([
+      {
+        id: 0,
+        name: "Era uma vez um gay",
+        snippets: [
+          { id: 0, content: "O nome dele era Fernando" },
+          { id: 1, content: "Ele tinha um amigo chamado Thiago" },
+        ],
+      },
+      {
+        id: 1,
+        name: "Outra história",
+        snippets: [
+          { id: 0, content: "Era uma vez em uma terra distante" },
+          { id: 1, content: "Havia um castelo muito grande" },
+        ],
+      },
+    ]);
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const data = await api.data.getAllTransactions();
-      setTransactions(data);
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+  const handleLogout = async () => {
+    if (api.login.logout()) {
+      return navigate("/login");
     }
   };
 
-  const totalAmountOfTransactions = api.data.calculateTotalAmount(transactions);
-  const totalOfTransactions = api.data.calculateTotalTransactions(transactions);
-  const totalDeposits = api.data.calculateTotalDeposits(transactions);
-  const totalWithdraws = api.data.calculateTotalWithdrawals(transactions);
-  const totalIndustriesCategories = api.data.calculateUniqueIndustriesCount(transactions);
+  const deleteStory = async (id: number) => {
+    // Remover esse codigo e descomentar o código abaixo desse console.log
+    console.log(`id a ser deletado: ${id}`);
 
-  const transactionByIndustryData = api.data.calculateTransactionByIndustry(transactions);
-  const transactionByStateData = api.data.calculateTransactionByState(transactions);
-  const transactionByAccountData = api.data.calculateTransactionByAccount(transactions);
-  const totalTypeOfTransactions = api.data.calculateTransactionByMonthYear(transactions);
+    // if ((await api.storyService.deleteStory(id)).data) {
+    //   return navigate("/");
+    // }
+  };
+
+  if (!stories) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
-    <>
-      <SideMenu menuItems={menuItems} />
-
-      <Grid width="100%" height="100%" display="flex" padding="0 3rem 0 3rem" flexDirection="column">
-        <Typography variant="h4">Seja bem vindo ao Dashboard</Typography>
-        <Typography variant="h6" marginTop="1rem">
-          Utilize os filtros abaixo para facilitar a sua análise:
-        </Typography>
-
-        <Grid item container spacing={2} marginTop="0.1rem">
-          <Grid item xs={12} sm={6} md={3}>
-            <DatePicker size="small" label="Filtrar por data" sx={{ width: "100%" }} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Select size="small" label="Filtrar por contas" options={accounts as []} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Select size="small" label="Filtrar por indústrias" options={industries as []} />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Select size="small" label="Filtrar por estado" options={states as []} />
-          </Grid>
-        </Grid>
-
-        <Grid item container spacing={2} marginTop="1.5rem">
-          <Grid item xs={12} sm={6} md={2.4}>
-            <CustomCard title="Total em Transações" value={totalAmountOfTransactions} backgroundColor="#0088FE" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <CustomCard title="Número de Transações" value={`${totalOfTransactions}`} backgroundColor="#FFBB28" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <CustomCard title="Total de depósitos" value={`${totalDeposits}`} backgroundColor="#00C49F" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <CustomCard title="Total de despesa" value={`${totalWithdraws}`} backgroundColor="#FF8042" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2.4}>
-            <CustomCard
-              title="Categorias de empresa"
-              value={`${totalIndustriesCategories}`}
-              backgroundColor="#AF69EE"
-            />
-          </Grid>
-        </Grid>
-
-        <Grid item container spacing={2} marginTop="1.5rem">
-          <Grid item xs={12} sm={6} md={4}>
-            <PieChartComponent data={transactionByIndustryData} title="Distribuição de transações por indústria" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <PieChartComponent data={transactionByStateData} title="Distribuição de transações por estado" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <SimpleBarChartComponent
-              data={transactionByAccountData}
-              title="Total de Transações por Conta"
-              dataKey="value"
-              xAxisDataKey="name"
-            />
-          </Grid>
-        </Grid>
-
-        <Grid item container spacing={2} marginTop="1.5rem">
-          <DoubleBarChartComponent
-            data={totalTypeOfTransactions}
-            title="Total de depósitos/despesas por Mês/Ano"
-            xAxisDataKey="name"
-            dataKey="Depositos"
-            barDataKeys={["Depositos", "Despesas"]}
-            colors={["#0088FE", "#FF8042"]}
-          />
-        </Grid>
+    <Grid width="70%" height="80vh" display="flex" flexDirection="column" margin="3rem auto">
+      <Grid display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="h3">Histórias</Typography>
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            onClick={() => navigate("/addStory")}
+            sx={{ fontWeight: "bold" }}
+          >
+            Adicionar história
+          </Button>
+          <Button variant="contained" color="error" size="large" onClick={handleLogout} sx={{ fontWeight: "bold" }}>
+            Sair
+          </Button>
+        </div>
       </Grid>
-    </>
+      {stories &&
+        stories.map(story => (
+          <Grid marginTop="1.5rem" key={story.id}>
+            <Grid
+              display="flex"
+              alignItems="center"
+              padding="0 2rem"
+              justifyContent="space-between"
+              borderRadius="10px 10px 0px 0"
+              sx={{ backgroundColor: "lightblue" }}
+            >
+              <Typography variant="h4">{story.name}</Typography>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  size="small"
+                  onClick={() => navigate(`/${story.id}/updateStory`)}
+                  sx={{ fontWeight: "bold", height: "60%" }}
+                >
+                  Editar história
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  size="small"
+                  onClick={() => deleteStory(1)}
+                  sx={{ fontWeight: "bold", height: "60%" }}
+                >
+                  Excluir história
+                </Button>
+              </div>
+            </Grid>
+            <Card
+              variant="elevation"
+              elevation={0}
+              sx={{
+                minHeight: "20%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "1.5rem",
+                paddingTop: "1.25rem",
+                ":hover": { backgroundColor: "#90dde718", cursor: "pointer" },
+              }}
+              onClick={() => navigate(`/${story.id}/addSnippet`)}
+            >
+              <Typography textAlign="justify" variant="body1" padding="0 2rem 1.5rem 2rem">
+                {story.snippets.map(snippet => snippet.content).join(" ")}
+              </Typography>
+            </Card>
+          </Grid>
+        ))}
+    </Grid>
   );
 }

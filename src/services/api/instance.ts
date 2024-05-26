@@ -1,6 +1,6 @@
 import axios from "axios";
 import { storage } from "./storage";
-import { IInitialRegistration, ILogin, IProducts } from "@interfaces/index";
+import { IInitialRegistration, ILogin } from "@interfaces/index";
 
 const url = import.meta.env.VITE_API_URL;
 
@@ -20,19 +20,9 @@ const createUser = (payload: IInitialRegistration) => {
   return axiosClient.post("/users", payload);
 };
 
-const createUserProduct = (payload: IProducts) => {
-  return axiosClient.post("/products", payload);
-};
-
-const editProduct = (payload: IProducts, productId: string) => {
-  return axiosClient.put(`/products/${productId}`, payload);
-};
-
 export const client = {
   login,
   createUser,
-  createUserProduct,
-  editProduct,
   delete: axiosClient.delete,
   get: axiosClient.get,
   post: axiosClient.post,

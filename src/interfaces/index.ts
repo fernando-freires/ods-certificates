@@ -21,12 +21,34 @@ export interface IGetUser extends IInitialRegistration {
   id: number;
 }
 
-export interface Transaction {
-  date: number;
-  amount: string;
-  transaction_type: "deposit" | "withdraw";
-  currency: string;
-  account: string;
-  industry: string;
-  state: string;
+export interface StoryDTO {
+  name: string;
+  firstSnippet: string;
+}
+
+interface Snippet {
+  id: number;
+  content: string;
+}
+
+export interface Story {
+  id: number;
+  name: string;
+  snippets: Snippet[];
+}
+
+export interface EditStoryDTO {
+  storyId: number;
+  name: string;
+}
+
+export interface SnippetDTO {
+  storyId: number;
+  snippet: string;
+}
+
+export interface EditSnippetDTO {
+  storyId: number;
+  snippetId: number;
+  snippet: string;
 }
