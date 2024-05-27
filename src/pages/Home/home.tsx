@@ -10,7 +10,7 @@ export function Home() {
 
   useEffect(() => {
     api.storyService.getAllStories().then(response => setStories(response.data));
-  }, [stories]);
+  }, [setStories]);
 
   const handleLogout = async () => {
     if (api.login.logout()) {
@@ -19,8 +19,12 @@ export function Home() {
   };
 
   const deleteStory = async (id: number) => {
-    if (await api.storyService.deleteStory(id)) {
-      return navigate("/");
+    try {
+      await api.storyService.deleteStory(id);
+
+      setStories(prevStories => prevStories.filter(story => story.id !== id));
+    } catch (error) {
+      console.error("Failed to delete story:", error);
     }
   };
 
