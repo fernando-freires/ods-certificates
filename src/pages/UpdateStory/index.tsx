@@ -11,7 +11,7 @@ export const UpdateStory = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    api.storyService.getStoryById(Number(id)).then(setStory);
+    api.storyService.getStoryById(Number(id)).then(response => setStory(response.data));
   }, [id]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,6 @@ export const UpdateStory = () => {
 
   const handleSave = async () => {
     if (!story) return;
-    console.log(story);
 
     const editStoryPayload: EditStoryDTO = { storyId: story.id, name: story.name };
     await api.storyService.editStory(editStoryPayload);
@@ -70,17 +69,18 @@ export const UpdateStory = () => {
         >
           <TextField label="Título" value={story.name} onChange={handleTitleChange} fullWidth />
           <Box width="100%" display="flex" flexDirection="column" gap="1rem">
-            {story.snippets.map((snippet, index) => (
-              <TextField
-                key={snippet.id}
-                label={`Trecho - ${index}`}
-                value={snippet.content}
-                multiline
-                rows={4}
-                fullWidth
-                onChange={handleSnippetChange(index)}
-              />
-            ))}
+            {story.snippets &&
+              story.snippets.map((snippet, index) => (
+                <TextField
+                  key={snippet.id}
+                  label={`Trecho - ${index}`}
+                  value={snippet.content || ""}
+                  multiline
+                  rows={4}
+                  fullWidth
+                  onChange={handleSnippetChange(index)}
+                />
+              ))}
           </Box>
         </Grid>
       </Card>

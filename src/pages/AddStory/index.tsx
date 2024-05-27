@@ -15,7 +15,6 @@ export const AddStory = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log(story);
       await api.storyService.createStory(story);
       navigate("/");
     } catch (error) {

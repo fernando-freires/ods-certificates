@@ -9,8 +9,8 @@ export function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.storyService.getAllStories().then(setStories);
-  }, []);
+    api.storyService.getAllStories().then(response => setStories(response.data));
+  }, [stories]);
 
   const handleLogout = async () => {
     if (api.login.logout()) {
@@ -19,7 +19,7 @@ export function Home() {
   };
 
   const deleteStory = async (id: number) => {
-    if ((await api.storyService.deleteStory(id)).data) {
+    if (await api.storyService.deleteStory(id)) {
       return navigate("/");
     }
   };
@@ -32,7 +32,7 @@ export function Home() {
     <Grid width="70%" height="80vh" display="flex" flexDirection="column" margin="3rem auto">
       <Grid display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h3">Histórias</Typography>
-        <div style={{ display: "flex", gap: "1rem" }}>
+        <div style={{ display: "flex", gap: "1rem", marginRight: "2rem" }}>
           <Button
             variant="contained"
             color="primary"
@@ -47,9 +47,9 @@ export function Home() {
           </Button>
         </div>
       </Grid>
-      {stories &&
+      {stories.length > 0 ? (
         stories.map(story => (
-          <Grid marginTop="1.5rem" key={story.id}>
+          <Grid marginTop="2.5rem" key={story.id}>
             <Grid
               display="flex"
               alignItems="center"
@@ -67,7 +67,7 @@ export function Home() {
                   onClick={() => navigate(`/${story.id}/updateStory`)}
                   sx={{ fontWeight: "bold", height: "60%" }}
                 >
-                  Editar história
+                  Editar
                 </Button>
                 <Button
                   variant="contained"
@@ -76,7 +76,7 @@ export function Home() {
                   onClick={() => deleteStory(story.id)}
                   sx={{ fontWeight: "bold", height: "60%" }}
                 >
-                  Excluir história
+                  Excluir
                 </Button>
               </div>
             </Grid>
@@ -99,7 +99,12 @@ export function Home() {
               </Typography>
             </Card>
           </Grid>
-        ))}
+        ))
+      ) : (
+        <Grid margin="0 auto" height="40%" display="flex" alignItems="center">
+          <Typography variant="h5">Ainda não temos histórias. Seja o primeiro a compartilhar com a gente!</Typography>
+        </Grid>
+      )}
     </Grid>
   );
 }

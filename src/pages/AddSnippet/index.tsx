@@ -1,17 +1,13 @@
-import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { SnippetDTO } from "@interfaces/index";
+import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
 import api from "@services/api";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AddSnippet = () => {
   const [snippet, setSnippet] = useState("");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-
-  useEffect(() => {
-    console.log(id);
-  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSnippet(e.target.value);
