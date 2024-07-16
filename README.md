@@ -6,7 +6,6 @@
 - Rode o comando: npm run dev
 - Em outro terminal, rode o comando: npm run fake:api
 - Abra o navegador: http://localhost:5174
-- Para verificar a realização dos testes unitários, e como solicitado, rode o comando npm test
 
 ## Informações sobre o projeto:
 
