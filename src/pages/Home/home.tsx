@@ -1,114 +1,26 @@
-import { Story } from "@interfaces/index";
-import { Button, Card, Grid, Typography } from "@mui/material";
-import api from "@services/api";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Typography } from "@mui/material";
+import Card from "../../components/Card/Card";
+import { Footer } from "../../components/Footer/Footer";
+import { Header } from "../../components/Header/Header";
+import { Container, ScrollWrapper } from "./styles";
+import TestPhoto from "./TestPhoto.jpg";
 
 export function Home() {
-  const [stories, setStories] = useState<Story[]>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    api.storyService.getAllStories().then(response => setStories(response.data));
-  }, [setStories]);
-
-  const handleLogout = async () => {
-    if (api.login.logout()) {
-      return navigate("/login");
-    }
-  };
-
-  const deleteStory = async (id: number) => {
-    try {
-      await api.storyService.deleteStory(id);
-
-      setStories(prevStories => prevStories.filter(story => story.id !== id));
-    } catch (error) {
-      console.error("Failed to delete story:", error);
-    }
-  };
-
-  if (!stories) {
-    return <Typography>Loading...</Typography>;
-  }
-
   return (
-    <Grid width="70%" height="80vh" display="flex" flexDirection="column" margin="3rem auto">
-      <Grid display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h3">Histórias</Typography>
-        <div style={{ display: "flex", gap: "1rem", marginRight: "2rem" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => navigate("/addStory")}
-            sx={{ fontWeight: "bold" }}
-          >
-            Adicionar história
-          </Button>
-          <Button variant="contained" color="error" size="large" onClick={handleLogout} sx={{ fontWeight: "bold" }}>
-            Sair
-          </Button>
-        </div>
-      </Grid>
-      {stories.length > 0 ? (
-        stories.map(story => (
-          <Grid marginTop="2.5rem" key={story.id}>
-            <Grid
-              display="flex"
-              alignItems="center"
-              padding="0 2rem"
-              justifyContent="space-between"
-              borderRadius="10px 10px 0px 0"
-              sx={{ backgroundColor: "lightblue" }}
-            >
-              <Typography variant="h4">{story.name}</Typography>
-              <div style={{ display: "flex", gap: "1rem" }}>
-                <Button
-                  variant="contained"
-                  color="inherit"
-                  size="small"
-                  onClick={() => navigate(`/${story.id}/updateStory`)}
-                  sx={{ fontWeight: "bold", height: "60%" }}
-                >
-                  Editar
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  size="small"
-                  onClick={() => deleteStory(story.id)}
-                  sx={{ fontWeight: "bold", height: "60%" }}
-                >
-                  Excluir
-                </Button>
-              </div>
-            </Grid>
-            <Card
-              variant="elevation"
-              elevation={0}
-              sx={{
-                minHeight: "20%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "1.5rem",
-                paddingTop: "1.25rem",
-                ":hover": { backgroundColor: "#90dde718", cursor: "pointer" },
-              }}
-              onClick={() => navigate(`/${story.id}/addSnippet`)}
-            >
-              <Typography textAlign="justify" variant="body1" padding="0 2rem 1.5rem 2rem">
-                {story.snippets.map(snippet => snippet.content).join(" ")}
-              </Typography>
-            </Card>
-          </Grid>
-        ))
-      ) : (
-        <Grid margin="0 auto" height="40%" display="flex" alignItems="center">
-          <Typography variant="h5">Ainda não temos histórias. Seja o primeiro a compartilhar com a gente!</Typography>
-        </Grid>
-      )}
-    </Grid>
+    <Container>
+      <Header />
+      <Typography variant="h3" marginTop="2rem" paddingLeft="2rem">
+        Olá, deseja continuar algum curso hoje?
+      </Typography>
+      <ScrollWrapper>
+        <Card imageSrc={TestPhoto} title="Introdução ao Python" progress={50} />
+        <Card imageSrc={TestPhoto} title="Desenvolvimento Web com React" progress={100} />
+        <Card imageSrc={TestPhoto} title="Desenvolvimento de Aplicativos com Flutter" progress={50} />
+        <Card imageSrc={TestPhoto} title="JavaScript Avançado" progress={90} />
+        <Card imageSrc={TestPhoto} title="Desenvolvimento de APIs com Node.js" progress={99} />
+        <Card imageSrc={TestPhoto} title="Machine Learning com Python" progress={100} />
+      </ScrollWrapper>
+      <Footer />
+    </Container>
   );
 }
