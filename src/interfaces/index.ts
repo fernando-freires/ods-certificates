@@ -9,7 +9,7 @@ export interface IAuthContextType {
 export interface IInitialRegistration {
   name: string;
   email: string;
-  password: string;
+  cpf: string;
 }
 
 export interface ILogin {

@@ -13,6 +13,9 @@ export async function login(web3: Web3<RegisteredSubscription>) {
       const accounts = await web3Obj.eth.getAccounts();
       const userContract = getUserContract(web3Obj);
       const userRegistered = await userContract?.methods.isUserRegistered(accounts[0]).call();
+      console.log(":)");
+      console.log(userRegistered);
+      console.log(accounts[0]);
       if (!userRegistered) {
         return false;
       }

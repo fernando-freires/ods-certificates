@@ -5,29 +5,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import api from "@services/api";
 import { IInitialRegistration } from "@interfaces/index";
+import { createUser } from "@services/web3/user";
+import { getWeb3Obj } from "@services/web3/login";
 
-const initialRegistrationSchema = z
-  .object({
-    name: z
-      .string()
-      .nonempty("O nome é obrigatório")
-      .transform(name => {
-        return name
-          .trim()
-          .split(" ")
-          .map(word => {
-            return word[0].toLocaleUpperCase().concat(word.substring(1));
-          })
-          .join(" ");
-      }),
-    email: z.string().nonempty("O e-mail é obrigatório").email("Formato de e-mail inválido"),
-    password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
-    confirmPassword: z.string().min(6, "Digite sua senha"),
-  })
-  .refine(data => data.password === data.confirmPassword, {
-    message: "As senhas são diferentes",
-    path: ["confirmPassword"],
-  });
+const initialRegistrationSchema = z.object({
+  name: z
+    .string()
+    .nonempty("O nome é obrigatório")
+    .transform(name => {
+      return name
+        .trim()
+        .split(" ")
+        .map(word => {
+          return word[0].toLocaleUpperCase().concat(word.substring(1));
+        })
+        .join(" ");
+    }),
+  email: z.string().nonempty("O e-mail é obrigatório").email("Formato de e-mail inválido"),
+  cpf: z.string().nonempty("CPF é obrigatório"),
+});
 
 type CreateUserFormData = z.infer<typeof initialRegistrationSchema>;
 
@@ -43,7 +39,9 @@ export function InitialRegistration() {
   });
 
   async function LoginUser(data: IInitialRegistration) {
-    await api.user.createUser(data);
+    await createUser(data, navigate);
+    console.log(data);
+    // await api.user.createUser(data);
     navigate("/login");
   }
 
@@ -89,22 +87,12 @@ export function InitialRegistration() {
               {...register("email")}
             />
             <TextField
-              type="password"
-              label="Senha"
+              label="CPF"
               size="small"
               fullWidth
-              error={!!errors.password}
-              helperText={errors ? errors.password?.message : ""}
-              {...register("password")}
-            />
-            <TextField
-              type="password"
-              label="Confirme sua senha"
-              size="small"
-              fullWidth
-              error={!!errors.confirmPassword}
-              helperText={errors ? errors.confirmPassword?.message : ""}
-              {...register("confirmPassword")}
+              error={!!errors.cpf}
+              helperText={errors ? errors.cpf?.message : ""}
+              {...register("cpf")}
             />
           </Grid>
           <Grid display="flex" flexDirection="column" gap="0.75rem" width="80%" margin="0 auto">

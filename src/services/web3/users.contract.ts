@@ -1,6 +1,6 @@
-import Web3, { Contract } from "web3";
+import Web3 from "web3";
 
-const address = "0xa4C63C8FcD88560C77367F3cd31D4b29709eF594";
+const address = "0x01F4a2A65752571391ab6d2855085303c764Fcb9";
 const abi = [
   {
     anonymous: false,
