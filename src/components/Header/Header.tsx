@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
-import TestPhoto from "./TestPhoto.jpg";
+import { Button, Grid } from "@mui/material";
+import Logo from "./Logo.png";
 import { CardImage, Container, HeaderFields } from "./style";
 import { useNavigate } from "react-router-dom";
 import api from "@services/api";
@@ -15,7 +15,7 @@ export const Header = () => {
   return (
     <Container>
       <HeaderFields>
-        <CardImage src={TestPhoto} />
+        <CardImage src={Logo} onClick={() => navigate("/")} />
         <Button variant="text" color="inherit" onClick={() => navigate("/")}>
           Início
         </Button>
@@ -23,15 +23,26 @@ export const Header = () => {
           Meus certificados
         </Button>
       </HeaderFields>
-      <Button
-        variant="contained"
-        color="error"
-        size="large"
-        onClick={handleLogout}
-        sx={{ fontWeight: "bold", marginRight: "2rem" }}
-      >
-        Sair
-      </Button>
+      <Grid>
+        <Button
+          variant="contained"
+          color="error"
+          size="large"
+          onClick={handleLogout}
+          sx={{ fontWeight: "bold", marginRight: "2rem" }}
+        >
+          Sair
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={() => navigate("/profile")}
+          sx={{ fontWeight: "bold", marginRight: "2rem" }}
+        >
+          Meu perfil
+        </Button>
+      </Grid>
     </Container>
   );
 };
