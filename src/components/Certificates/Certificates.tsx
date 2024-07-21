@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { CardImage, CardTitle, Certificate, Container, ProgressBar } from "./styles";
 import TestPhoto from "./TestPhoto.jpg";
-import { Typography, Modal, Box, Grid } from "@mui/material";
+import { Typography, Modal, Box, Grid, IconButton } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const style = {
   position: "absolute",
@@ -35,6 +36,11 @@ export const Certificates = () => {
     setSelectedCertificate(null);
   };
 
+  const handleDownload = () => {
+    // Lógica para download do certificado
+    alert("Download iniciado");
+  };
+
   return (
     <>
       <Container>
@@ -49,6 +55,9 @@ export const Certificates = () => {
 
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
+          <IconButton onClick={handleDownload} sx={{ position: "absolute", top: 16, right: 16 }}>
+            <DownloadIcon />
+          </IconButton>
           <Typography variant="h3" component="h2" fontWeight="bold" sx={{ mt: 2 }}>
             Certificado de Conclusão
           </Typography>
