@@ -1,33 +1,31 @@
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import api from "@services/api";
-import { ILogin } from "@interfaces/index";
-
-const loginSchema = z.object({
-  email: z.string().nonempty("O e-mail é obrigatório").email("Formato de e-mail inválido").toLowerCase(),
-  password: z.string().nonempty("Campo obrigatório"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import { login } from "@services/web3/login";
+import { storage } from "@services/web3/web3Storage";
+import Web3 from "web3";
+import { getUserContract } from "@services/web3/users.contract";
 
 export function Login() {
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
+  const connectWallet = async () => {
+    if (window.ethereum) {
+      const web3Obj = new Web3(window.ethereum);
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+      } catch (error: any) {
+        alert(error.message);
+        return;
+      }
+      const userLogged = await login(web3Obj);
 
-  async function LoginUser(data: ILogin) {
-    await api.login.login(data);
-    navigate("/home");
-  }
+      if (!userLogged) {
+        navigate("/register");
+      } else {
+        navigate("/home");
+      }
+    }
+  };
 
   return (
     <Grid
@@ -52,35 +50,9 @@ export function Login() {
           padding: "1rem",
         }}
       >
-        <form onSubmit={handleSubmit(LoginUser)} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          <Grid display="flex" flexDirection="column" gap="1rem" sx={{ height: "50%" }}>
-            <TextField
-              label="Email"
-              size="small"
-              fullWidth
-              error={!!errors.email}
-              helperText={errors ? errors.email?.message : ""}
-              {...register("email")}
-            />
-            <TextField
-              label="Senha"
-              size="small"
-              type="password"
-              fullWidth
-              error={!!errors.password}
-              helperText={errors ? errors.password?.message : ""}
-              {...register("password")}
-            />
-          </Grid>
-          <Grid display="flex" flexDirection="column" gap="0.75rem" width="80%" margin="0 auto">
-            <Button type="submit" variant="contained" color="primary">
-              Login
-            </Button>
-            <Button variant="outlined" color="primary" onClick={() => navigate("/register")}>
-              Cadastro
-            </Button>
-          </Grid>
-        </form>
+        <button onClick={connectWallet}>
+          {storage.getUserId() ? `Conectado: ${storage.getUserId()}` : "Connect Wallet"}
+        </button>
       </Card>
     </Grid>
   );
