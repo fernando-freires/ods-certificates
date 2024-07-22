@@ -33,11 +33,14 @@ export const CardTitle = styled.h2`
   font-size: 16px;
 `;
 
-export const ProgressBar = styled.div`
+interface ProgressBarProps {
+  progress: number;
+}
+
+export const ProgressBar = styled.div<ProgressBarProps>`
   width: ${({ progress }) => progress}%;
   height: 1rem;
   background-color: #374b04;
   transition: width 0.3s ease;
-  border-radius: 16px;
-  margin-bottom: 1rem;
+  border-radius: 0px 8px 8px 0;
 `;

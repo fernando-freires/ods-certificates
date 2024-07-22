@@ -19,6 +19,7 @@ export interface ILogin {
 
 export interface IGetUser extends IInitialRegistration {
   id: number;
+  password: string;
 }
 
 export interface StoryDTO {

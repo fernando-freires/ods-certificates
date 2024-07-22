@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Web3 from "web3";
 import { storage } from "@services/web3/web3Storage";
 import { sign } from "jsonwebtoken";
@@ -17,7 +18,7 @@ export async function login(web3: Web3<RegisteredSubscription>) {
       if (!userRegistered) {
         return false;
       }
-      const userData = await userContract?.methods.getUser(accounts[0]).call();
+      const userData = (await userContract?.methods.getUser(accounts[0]).call()) as any;
       const token = sign({ accountId: accounts[0] }, "secret", { expiresIn: "7d" });
 
       storage.setUserId(accounts[0]);

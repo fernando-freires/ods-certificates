@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { CardImage, CardTitle, Certificate, Container, ProgressBar } from "./styles";
-import TestPhoto from "./TestPhoto.jpg";
-import { Typography, Modal, Box, Grid, IconButton, Button } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DownloadIcon from "@mui/icons-material/Download";
-import { getWeb3Obj } from "@services/web3/login";
-import { getCertificatesContract } from "@services/web3/certificates.contract";
+import { Box, Button, Grid, IconButton, Modal, Typography } from "@mui/material";
 import { checkUserCertificate, createUserCertificate } from "@services/web3/certificate";
 import { storage } from "@services/web3/web3Storage";
+import { useState } from "react";
+import { CardImage, CardTitle, Certificate, Container, ProgressBar } from "./styles";
+import TestPhoto from "./TestPhoto.jpg";
 
 const style = {
   position: "absolute",
@@ -43,11 +42,11 @@ const confirmationStyle = {
 export const Certificates = () => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [selectedCertificate, setSelectedCertificate] = useState(null);
-  const [candidateCert, setCandidateCert] = useState(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<any>(null);
+  const [candidateCert, setCandidateCert] = useState<any>(null);
 
-  const handleOpen = certificate => {
-    checkUserCertificate(certificate.id).then(response => {
+  const handleOpen = (certificate: any) => {
+    checkUserCertificate(certificate.id).then((response: any) => {
       if (response == false) {
         setCandidateCert(certificate);
         setConfirmOpen(true);
@@ -59,7 +58,7 @@ export const Certificates = () => {
     });
   };
 
-  const convertDate = timestamp => {
+  const convertDate = (timestamp: Date) => {
     const date = new Date(Number(timestamp));
 
     const meses = [
@@ -90,7 +89,7 @@ export const Certificates = () => {
     setSelectedCertificate(null);
   };
 
-  const handleCertiticateGenerated = cert => {
+  const handleCertiticateGenerated = (cert: any) => {
     cert.completionDate = convertDate(cert.completionDate);
     setSelectedCertificate(cert);
     setConfirmOpen(false);

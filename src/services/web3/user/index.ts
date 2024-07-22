@@ -1,7 +1,7 @@
 import { IInitialRegistration } from "@interfaces/index";
+import { NavigateFunction } from "react-router-dom";
 import { getWeb3Obj } from "../login";
 import { getUserContract } from "../users.contract";
-import { NavigateFunction } from "react-router-dom";
 import { storage } from "../web3Storage";
 
 export async function createUser(payload: IInitialRegistration, navigate: NavigateFunction) {
@@ -11,7 +11,7 @@ export async function createUser(payload: IInitialRegistration, navigate: Naviga
 
   userContract.events.UserRegistered().on("data", event => {
     console.log("Event UserRegistered:", event);
-    const { userAddress, name, email } = event.returnValues;
+    const { userAddress, name } = event.returnValues;
     alert(`Usuário ${name} cadastrado [${userAddress}]`);
     navigate("/login");
   });
@@ -53,9 +53,9 @@ export async function updateUserData(payload: IInitialRegistration, navigate: Na
   userContract.events.UserUpdated().on("data", event => {
     if (!eventListenned) {
       console.log("Event UserUpdated:", event);
-      const { userAddress, name, email } = event.returnValues;
+      const { userAddress, name } = event.returnValues;
       alert(`Usuário ${name} atualizado com sucesso [${userAddress}]`);
-      storage.setUserName(name);
+      storage.setUserName(name as string);
       navigate("/profile");
       eventListenned = true;
     }

@@ -1,16 +1,17 @@
-import React, { useRef } from "react";
-import { toPng } from "html-to-image";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { saveAs } from "file-saver";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
 
-const CertificateGenerator = ({ userName, certificateHash, courseName, currentDate }) => {
-  const certificateRef = useRef();
+const CertificateGenerator = ({ userName, certificateHash, courseName, currentDate }: any) => {
+  const certificateRef: any = useRef();
 
   const handleDownload = () => {
     if (certificateRef.current === null) {
       return;
     }
 
-    toPng(certificateRef.current)
+    toPng(certificateRef.current as any)
       .then(dataUrl => {
         saveAs(dataUrl, "certificado.png");
       })
@@ -21,14 +22,26 @@ const CertificateGenerator = ({ userName, certificateHash, courseName, currentDa
 
   return (
     <div>
-      <div ref={certificateRef} style={styles.certificate}>
+      <div
+        ref={certificateRef}
+        style={{
+          width: "600px",
+          height: "400px",
+          border: "2px solid #000",
+          borderRadius: "10px",
+          padding: "20px",
+          textAlign: "center",
+          backgroundColor: "#fff",
+          position: "relative",
+        }}
+      >
         <h1 style={styles.title}>Certificado de Conclusão</h1>
         <p style={styles.text}>Certificamos que</p>
         <h2 style={styles.name}>{userName}</h2>
         <p style={styles.text}>concluiu com êxito o curso de</p>
         <h2 style={styles.course}>{courseName}</h2>
         <p style={styles.text}>{currentDate}</p>
-        <p style={styles.signature}>{certificateHash}</p>
+        <p style={{ fontSize: "18px", position: "absolute", bottom: "20px", right: "20px" }}>{certificateHash}</p>
       </div>
       <button onClick={handleDownload} style={styles.button}>
         Download Certificado

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getCertificatesContract } from "../certificates.contract";
 import { getWeb3Obj } from "../login";
 
@@ -13,7 +14,13 @@ export async function checkUserCertificate(courseId: string) {
   }
 }
 
-export async function createUserCertificate(courseName: string, courseId: string, completionDate: number, callback) {
+export async function createUserCertificate(
+  courseName: string,
+  courseId: string,
+  completionDate: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  callback: any,
+) {
   const web3Obj = getWeb3Obj();
   const accounts = await web3Obj.eth.getAccounts();
   const certificateContract = getCertificatesContract(web3Obj);

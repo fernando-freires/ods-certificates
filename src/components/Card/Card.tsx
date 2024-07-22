@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { CardContent, CardImage, CardInfoContainer, CardTitle, CardWrapper, Percentage, ProgressBar } from "./styles";
 
-export default function Card({ imageSrc, title, progress }) {
+export default function Card({ imageSrc, title, progress }: { imageSrc: string; title: string; progress: number }) {
   return (
     <CardWrapper>
       <CardImage src={imageSrc} alt={title} />

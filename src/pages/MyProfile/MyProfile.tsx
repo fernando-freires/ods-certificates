@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { getUserData, updateUserData } from "@services/web3/user";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
-import { Container, TextField, Button, Typography, Box, Grid } from "@mui/material";
-import { getUserData, updateUserData } from "@services/web3/user";
 
 export const MyProfile = () => {
   const navigate = useNavigate();
@@ -11,7 +11,8 @@ export const MyProfile = () => {
   const [userCpf, setUserCpf] = useState<string>("");
 
   useEffect(() => {
-    getUserData().then(userData => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getUserData().then((userData: any) => {
       if (userData != null) {
         setUserName(userData.name);
         setUserEmail(userData.email);
@@ -20,7 +21,7 @@ export const MyProfile = () => {
     });
   }, []);
 
-  async function updateUser(event) {
+  async function updateUser(event: { preventDefault: () => void }) {
     event.preventDefault();
     const data = {
       name: userName,

@@ -64,7 +64,11 @@ export const ProgressContainer = styled.div`
   overflow: hidden;
 `;
 
-export const ProgressBar = styled.div`
+interface ProgressBarProps {
+  progress: number;
+}
+
+export const ProgressBar = styled.div<ProgressBarProps>`
   width: ${({ progress }) => progress}%;
   height: 1rem;
   background-color: #374b04;
