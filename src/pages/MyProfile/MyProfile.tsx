@@ -1,33 +1,34 @@
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { z } from "zod";
 import { Header } from "../../components/Header/Header";
 import { Container, TextField, Button, Typography, Box, Grid } from "@mui/material";
-
-const initialRegistrationSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().email("E-mail inválido").optional(),
-  cpf: z.string().optional(),
-});
-
-type CreateUserFormData = z.infer<typeof initialRegistrationSchema>;
+import { getUserData, updateUserData } from "@services/web3/user";
 
 export const MyProfile = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [userCpf, setUserCpf] = useState<string>("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateUserFormData>({
-    resolver: zodResolver(initialRegistrationSchema),
-  });
+  useEffect(() => {
+    getUserData().then(userData => {
+      if (userData != null) {
+        setUserName(userData.name);
+        setUserEmail(userData.email);
+        setUserCpf(userData.cpf);
+      }
+    });
+  }, []);
 
-  async function updateUser(data: CreateUserFormData) {
+  async function updateUser(event) {
+    event.preventDefault();
+    const data = {
+      name: userName,
+      email: userEmail,
+      cpf: userCpf,
+    };
     console.log(data);
-    navigate("/login");
+    updateUserData(data, navigate);
   }
 
   return (
@@ -37,36 +38,36 @@ export const MyProfile = () => {
         <Typography variant="h4" component="h2" gutterBottom textAlign="center">
           Editar Perfil
         </Typography>
-        <Box component="form" onSubmit={handleSubmit(updateUser)} noValidate>
+        <Box component="form" onSubmit={updateUser} noValidate>
           <TextField
             fullWidth
             margin="normal"
             id="name"
             label="Nome"
-            {...register("name")}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-            defaultValue="valor padrao"
+            value={userName ?? ""}
+            onChange={event => {
+              setUserName(event.target.value);
+            }}
           />
           <TextField
             fullWidth
             margin="normal"
             id="email"
             label="Email"
-            {...register("email")}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            defaultValue="valor padrao"
+            value={userEmail ?? ""}
+            onChange={event => {
+              setUserEmail(event.target.value);
+            }}
           />
           <TextField
             fullWidth
             margin="normal"
             id="cpf"
             label="CPF"
-            {...register("cpf")}
-            error={!!errors.cpf}
-            helperText={errors.cpf?.message}
-            defaultValue="valor padrao"
+            value={userCpf ?? ""}
+            onChange={event => {
+              setUserCpf(event.target.value);
+            }}
           />
           <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
             Editar

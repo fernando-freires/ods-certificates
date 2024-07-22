@@ -4,12 +4,10 @@ import { sign } from "jsonwebtoken";
 import { RegisteredSubscription } from "web3/lib/commonjs/eth.exports";
 import { getUserContract } from "../users.contract";
 
-let web3Obj: Web3<RegisteredSubscription>;
-
 export async function login(web3: Web3<RegisteredSubscription>) {
   if (window.ethereum) {
     try {
-      web3Obj = web3;
+      const web3Obj = web3;
       const accounts = await web3Obj.eth.getAccounts();
       const userContract = getUserContract(web3Obj);
       const userRegistered = await userContract?.methods.isUserRegistered(accounts[0]).call();
@@ -37,5 +35,5 @@ export async function login(web3: Web3<RegisteredSubscription>) {
 }
 
 export function getWeb3Obj() {
-  return web3Obj;
+  return new Web3(window.ethereum);
 }

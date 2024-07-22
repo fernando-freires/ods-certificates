@@ -1,7 +1,63 @@
 import Web3 from "web3";
 
-const address = "0x01F4a2A65752571391ab6d2855085303c764Fcb9";
+const address = "0x071eb4Fa7949D4FC1826A727588574F68a1030B8";
 const abi = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "userAddress",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "email",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "cpf",
+        type: "string",
+      },
+    ],
+    name: "registerUser",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "userAddress",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "email",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "cpf",
+        type: "string",
+      },
+    ],
+    name: "updateUser",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
   {
     anonymous: false,
     inputs: [
@@ -72,6 +128,11 @@ const abi = [
         name: "email",
         type: "string",
       },
+      {
+        internalType: "string",
+        name: "cpf",
+        type: "string",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -99,34 +160,6 @@ const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "userAddress",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "email",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "cpf",
-        type: "string",
-      },
-    ],
-    name: "registerUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "",
         type: "address",
       },
@@ -140,34 +173,6 @@ const abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "userAddress",
-        type: "address",
-      },
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "email",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "cpf",
-        type: "string",
-      },
-    ],
-    name: "updateUser",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {

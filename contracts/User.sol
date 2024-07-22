@@ -37,10 +37,10 @@ contract User {
         emit UserUpdated(userAddress, name, email);
     }
 
-    function getUser(address userAddress) public view returns (string memory name, string memory email) {
+    function getUser(address userAddress) public view returns (string memory name, string memory email, string memory cpf) {
         require(registeredUsers[userAddress], "User is not registered");
         UserData storage user = users[userAddress];
-        return (user.name, user.email);
+        return (user.name, user.email, user.cpf);
     }
 
     function isUserRegistered(address userAddress) public view returns (bool){
