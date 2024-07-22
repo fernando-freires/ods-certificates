@@ -3,6 +3,10 @@ import { CardImage, CardTitle, Certificate, Container, ProgressBar } from "./sty
 import TestPhoto from "./TestPhoto.jpg";
 import { Typography, Modal, Box, Grid, IconButton, Button } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
+import { getWeb3Obj } from "@services/web3/login";
+import { getCertificatesContract } from "@services/web3/certificates.contract";
+import { checkUserCertificate, createUserCertificate } from "@services/web3/certificate";
+import { storage } from "@services/web3/web3Storage";
 
 const style = {
   position: "absolute",
@@ -40,10 +44,44 @@ export const Certificates = () => {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState(null);
+  const [candidateCert, setCandidateCert] = useState(null);
 
   const handleOpen = certificate => {
-    setSelectedCertificate(certificate);
-    setConfirmOpen(true);
+    checkUserCertificate(certificate.id).then(response => {
+      if (response == false) {
+        setCandidateCert(certificate);
+        setConfirmOpen(true);
+      } else {
+        response.completionDate = convertDate(response.completionDate);
+        setSelectedCertificate(response);
+        setOpen(true);
+      }
+    });
+  };
+
+  const convertDate = timestamp => {
+    const date = new Date(Number(timestamp));
+
+    const meses = [
+      "janeiro",
+      "fevereiro",
+      "março",
+      "abril",
+      "maio",
+      "junho",
+      "julho",
+      "agosto",
+      "setembro",
+      "outubro",
+      "novembro",
+      "dezembro",
+    ];
+
+    const dia = date.getDate();
+    const mes = meses[date.getMonth()];
+    const ano = date.getFullYear();
+
+    return `em ${dia} de ${mes} de ${ano}.`;
   };
 
   const handleClose = () => {
@@ -52,9 +90,15 @@ export const Certificates = () => {
     setSelectedCertificate(null);
   };
 
-  const handleConfirm = () => {
+  const handleCertiticateGenerated = cert => {
+    cert.completionDate = convertDate(cert.completionDate);
+    setSelectedCertificate(cert);
     setConfirmOpen(false);
     setOpen(true);
+  };
+
+  const handleConfirm = () => {
+    createUserCertificate(candidateCert.name, candidateCert.id, Date.now(), handleCertiticateGenerated);
   };
 
   const handleDownload = () => {
@@ -65,10 +109,15 @@ export const Certificates = () => {
   return (
     <>
       <Container>
-        {["Curso 1", "Curso 2", "Curso 3", "Curso 4"].map((title, index) => (
-          <Certificate key={index} onClick={() => handleOpen(title)}>
+        {[
+          { name: "Curso 1", id: "c1", completionDate: "22/01/2004" },
+          { name: "Curso 2", id: "c2", completionDate: "22/01/2004" },
+          { name: "Curso 3", id: "c3", completionDate: "22/01/2004" },
+          { name: "Curso 4", id: "c4", completionDate: "22/01/2004" },
+        ].map((course, index) => (
+          <Certificate key={index} onClick={() => handleOpen(course)}>
             <CardImage src={TestPhoto} />
-            <CardTitle>{title}</CardTitle>
+            <CardTitle>{course.name}</CardTitle>
             <ProgressBar progress={90} />
           </Certificate>
         ))}
@@ -98,16 +147,20 @@ export const Certificates = () => {
           </Typography>
           <Grid height="65%" display="flex" flexDirection="column" justifyContent="space-evenly">
             <Typography variant="h5">Certificamos que</Typography>
-            <Typography variant="h3">Thiago marques</Typography>
+            <Typography variant="h3">{storage.getUserName()}</Typography>
             <Typography variant="h5" sx={{ mt: 5 }}>
               concluiu com êxito o curso de
             </Typography>
             <Typography variant="h4" fontWeight="bold">
-              {selectedCertificate}
+              {selectedCertificate == null ? "" : selectedCertificate.courseName}
             </Typography>
-            <Typography sx={{ mt: 2 }}>em 21 de julho de 2024.</Typography>
+            <Typography sx={{ mt: 2 }}>
+              {selectedCertificate == null ? "" : selectedCertificate.completionDate}
+            </Typography>
           </Grid>
-          <Typography sx={{ mt: 4, textAlign: "right" }}>Assinatura</Typography>
+          <Typography sx={{ mt: 4, textAlign: "right" }}>
+            {selectedCertificate == null ? "" : selectedCertificate.certificateHash}
+          </Typography>
         </Box>
       </Modal>
     </>

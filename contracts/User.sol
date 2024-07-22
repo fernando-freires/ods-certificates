@@ -2,7 +2,6 @@
 pragma solidity ^0.8.26;
 
 contract User {
-
     struct UserData {
         string name;
         string email;
@@ -26,24 +25,41 @@ contract User {
         _;
     }
 
-    function registerUser(address userAddress, string memory name, string memory email, string memory cpf) public userNotRegistered(userAddress, cpf) {
+    modifier userModify(address userAddress) {
+        require(msg.sender == userAddress, "User trying to modify is not the account owner");
+        _;
+    }
+
+    function registerUser(
+        address userAddress,
+        string memory name,
+        string memory email,
+        string memory cpf
+    ) public userNotRegistered(userAddress, cpf) {
         users[userAddress] = UserData(name, email, cpf);
         registeredUsers[userAddress] = true;
         emit UserRegistered(userAddress, name, email);
     }
 
-    function updateUser(address userAddress, string memory name, string memory email, string memory cpf) public userRegistered(userAddress) {
+    function updateUser(
+        address userAddress,
+        string memory name,
+        string memory email,
+        string memory cpf
+    ) public userRegistered(userAddress) userModify(userAddress) {
         users[userAddress] = UserData(name, email, cpf);
         emit UserUpdated(userAddress, name, email);
     }
 
-    function getUser(address userAddress) public view returns (string memory name, string memory email, string memory cpf) {
+    function getUser(
+        address userAddress
+    ) public view userModify(userAddress) returns (string memory name, string memory email, string memory cpf) {
         require(registeredUsers[userAddress], "User is not registered");
         UserData storage user = users[userAddress];
         return (user.name, user.email, user.cpf);
     }
 
-    function isUserRegistered(address userAddress) public view returns (bool){
+    function isUserRegistered(address userAddress) public view returns (bool) {
         return registeredUsers[userAddress];
     }
 }

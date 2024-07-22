@@ -71,7 +71,7 @@ export function InitialRegistration() {
         <form onSubmit={handleSubmit(LoginUser)} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           <Grid display="flex" flexDirection="column" gap="1rem" sx={{ height: "50%" }}>
             <TextField
-              label="Nome"
+              label="Nome Completo"
               size="small"
               fullWidth
               error={!!errors.name}
